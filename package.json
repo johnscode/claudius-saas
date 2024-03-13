@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 4000",
     "lint": "next lint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.17.2",
     "@clerk/nextjs": "^4.29.9",
     "@hookform/resolvers": "^3.3.4",
     "@prisma/client": "^5.10.2",
