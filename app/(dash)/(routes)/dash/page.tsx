@@ -1,9 +1,5 @@
 "use client";
 
-import {Button} from "@/components/ui/button";
-import {UserButton} from "@clerk/nextjs";
-import {EveSignOutButton} from "@/components/ui/sign-out-button"
-
 import { useRouter } from "next/navigation";
 
 import {ArrowRight, Code, ImageIcon, MessageSquare, Music, VideoIcon} from "lucide-react";

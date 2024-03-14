@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import OpenAI from "openai"
-import {openai} from "@/lib/gptutils";
-import {OpenAIConfig} from "@/lib/gptutils";
+import {openai} from "@/lib/claudeutils";
+import {OpenAIConfig} from "@/lib/claudeutils";
 
 import {checkApiLimit, incrementApiLimit} from "@/lib/api-limit";
 import {checkSubscription} from "@/lib/subscription";

@@ -1,10 +1,12 @@
-An AI SaaS built using in next 14 that makes a great boilerplate to build your own SaaS.
+An AI Chat Assistant SaaS built using [Anthropic's](https://www.anthropic.com/) 
+Claude3. It is built in node.js and typescript using next 14 and makes a great 
+boilerplate to build your own SaaS.
 
-This repo is an implementation of [next13-ai-saas](https://github.com/AntonioErdeljac/next13-ai-saas)  from Antonio Erdeljac's original tutorial.
-I have updated it to use next-14 and made some modifications, notably using local postgres rather than a cloud db.  Likely to add features as more AI models 
-get released to the community. 
-
-It is a [Next.js](https://nextjs.org/) project, bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This repo is a fork of [next14-ai-saas](https://github.com/johnscode/next14-ai-saas). This is well featured
+with integrations expected of a beta-stage product. It includes:
+- [Stripe](https://stripe.com/) for payments
+- [Clerk](https://clerk.com/) for authentication and user management
+- [Crisp](https://crisp.chat/en/) for customer support using chat
 
 ## Setup
 
@@ -14,10 +16,12 @@ You will need to create accounts with the following services in order to get api
 - [Clerk](https://clerk.com/)
 - [Prisma](https://www.prisma.io/)
 - [Stripe](https://stripe.com/)
-- [Replicate](https://replicate.com/)
+- [Crisp](https://crisp.chat/en/)
 
 This repo assumes a local postgres database. You can use that or change to another. 
 Note that prisma supports MySQL, MongoDB, PostGres, as well as some cloud db providers.
+
+Note that the 'key' for Crisp is not in .env, but is set in components/crisp-chat.tsx
 
 You need to create a .env file with the following:
 ```shell
@@ -36,8 +40,6 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 OPENAI_API_KEY=YOUR-OPENAI-API-KEY
 ANTHROPIC_API_KEY=YOUR_ANTHROPIC_API_KEY
 
-REPLICATE_API_KEY=YOUR-REPLICATE-API-KEY
-
 STRIPE_API_KEY=YOUR-STRIPE-API-KEY
 STRIPE_WEBHOOK_SECRET=YOUR-STRIPE-WEBHOOK-SECRET
 
@@ -52,7 +54,7 @@ npm run postinstall
 ```
 This runs `npx prisma generate` which initializes the db. Note that if you make any 
 modifications to the db schema, file `prisma/schema.prisma` , you will need to run
-`npx prisma generate`
+`npx prisma generate`. See the pris[](https://www.prisma.io/docs)ma docs for more info.
 
 Now, run the development server:
 
@@ -60,20 +62,16 @@ Now, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:4000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/(landing)/page.tsx`. The page auto-updates as you edit the file.
 
-## Learn More
+## Todo
+Note that this is a work in progress. 
 
-To see the original tutorial:
-
-- [Build A SaaS AI Platform](https://www.codewithantonio.com/projects/ai-saas) - Antonio Erdeljac's original next13-ai-saas tutorial
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- reskin - colors and fonts
+- remove rest of OpenAI code
+- 
 
 
 

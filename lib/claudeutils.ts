@@ -15,15 +15,22 @@ export const OpenAIConfig = new Configuration({
     apiKey: process.env.OPENAI_API_KEY
 })
 
-export class UserMsg implements ChatCompletionUserMessageParam {
-    content: string|ChatCompletionContentPart[];
+export type ClaudeMsgType = "user" | "assistant"
+
+export interface ClaudeChatMsg {
+    content: string|null|undefined
+    role: ClaudeMsgType
+}
+
+export class UserMsg implements ClaudeChatMsg {
+    content: string|null|undefined;
     role: 'user';
-    constructor(content: string|ChatCompletionContentPart[]) {
+    constructor(content: string|null|undefined) {
         this.content = content;
         this.role = 'user'
     }
 }
-export class AsstMsg implements ChatCompletionAssistantMessageParam {
+export class AsstMsg implements ClaudeChatMsg {
     content: string|null|undefined;
     role: 'assistant';
     constructor(content: string|null|undefined) {
@@ -31,23 +38,12 @@ export class AsstMsg implements ChatCompletionAssistantMessageParam {
         this.role = 'assistant'
     }
 }
-export class SysMsg implements ChatCompletionSystemMessageParam {
-    content: string;
-    role: 'system';
-    constructor(content: string) {
-        this.content = content;
-        this.role = 'system'
-    }
-}
 
-export function createMsg(msg: ChatCompletionMessageParam): ChatCompletionMessageParam|null {
-    switch (msg.role) {
+export function createMsg(type: ClaudeMsgType, msg: string|null|undefined): ClaudeChatMsg {
+    switch (type) {
         case "user":
-            return new UserMsg(msg.content);
-        case "system":
-            return new SysMsg(msg.content);
+            return new UserMsg(msg);
         case "assistant":
-            return new AsstMsg(msg.content)
+            return new AsstMsg(msg)
     }
-    return null
 }

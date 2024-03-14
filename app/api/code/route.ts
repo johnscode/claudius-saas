@@ -1,18 +1,23 @@
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import Configuration from "openai";
 import OpenAI from "openai"
 import ChatCompletionMessageParam = OpenAI.ChatCompletionMessageParam;
-import ChatCompletionRequestMessage from "openai";
 
-import {openai} from "@/lib/gptutils";
-import {createMsg, AsstMsg, UserMsg, SysMsg} from "@/lib/gptutils";
-import {OpenAIConfig} from "@/lib/gptutils";
+import {ClaudeChatMsg, openai} from "@/lib/claudeutils";
+import {createMsg, AsstMsg, UserMsg} from "@/lib/claudeutils";
 
 import {checkApiLimit, incrementApiLimit} from "@/lib/api-limit";
 import {checkSubscription} from "@/lib/subscription";
+import Anthropic from "@anthropic-ai/sdk";
 
-const instructionMessage = new AsstMsg("You are a code generator. You must answer only in markdown code snippets. Use code comments for explanations.")
+const anthropic = new Anthropic({
+    apiKey: process.env['ANTHROPIC_API_KEY'], // This is the default and can be omitted
+});
+
+const instructionMessage: string = "You are a code generation " +
+    "AI Assistant with a sense of humor Your name is Eve. You " +
+    "must answer only in markdown code snippets. Use code " +
+    "comments for explanations."
 
 
 export async function POST(
@@ -27,10 +32,6 @@ export async function POST(
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        if (!OpenAIConfig.apiKey) {
-            return new NextResponse("OpenAI API Key not configured.", { status: 500 });
-        }
-
         if (!messages) {
             return new NextResponse("Messages are required", { status: 400 });
         }
@@ -40,26 +41,29 @@ export async function POST(
         if (!freeTrial && !isPro) {
             return new NextResponse("Free trial has expired. Please upgrade to pro.", { status: 403 });
         }
-        // const pruned_messages: {}[] = messages.map((msg: GptMessage) => {role: msg.role; content: msg.content});
-        // const msgs: ChatCompletionMessageParam[] = []
-        const msgs = messages.map((msg: ChatCompletionMessageParam) => {
-            const newmsg: ChatCompletionMessageParam|null = createMsg(msg)
-            return newmsg
+
+        const msgs = messages.map((msg: ClaudeChatMsg) => {
+            return createMsg(msg.role, msg.content)
         })
-        const stream = await openai.chat.completions.create({
-            model: "gpt-4",
-            messages: [instructionMessage, ...msgs],
-            stream: true,
-        });
+        const stream = anthropic.messages
+            .stream({
+                system: instructionMessage,
+                model: 'claude-3-sonnet-20240229',
+                max_tokens: 1024,
+                messages: msgs,
+            })
+            .on('text', (text) => {
+                // console.log(text);
+            });
+        const responseMessage = await stream.finalMessage();
+        console.log(responseMessage);
+        console.log(`response token count ${JSON.stringify(responseMessage.usage)}`)
 
         if (!isPro) {
             await incrementApiLimit();
         }
-        var msg = ""
-        for await (const chunk of stream) {
-            msg = msg.concat(chunk.choices[0]?.delta?.content || "")
-        }
-        return NextResponse.json(msg);
+
+        return NextResponse.json(responseMessage.content[0].text);
     } catch (error) {
         console.log('--- gpt error ---', error);
         return new NextResponse("Internal Error", { status: 500 });
