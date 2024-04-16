@@ -7,6 +7,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster"
 import {ModalProvider} from "@/components/modal-provider";
 import {CrispProvider} from "@/components/crisp-provider";
+import {UserProvider} from "@auth0/nextjs-auth0/client";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,14 +23,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <ClerkProvider>
-        <html lang="en">
-        <CrispProvider />
+      // <ClerkProvider>
+          <html lang="en">
+          <CrispProvider/>
           <body className={inter.className}>
-          <Toaster />
-          <ModalProvider />
-          {children}</body>
-        </html>
-      </ClerkProvider>
+          <UserProvider>
+              <Toaster/>
+              <ModalProvider/>
+              {children}
+          </UserProvider>
+          </body>
+          </html>
+      // </ClerkProvider>
   );
 }

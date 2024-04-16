@@ -25,6 +25,12 @@ Note that the 'key' for Crisp is not in .env, but is set in components/crisp-cha
 
 You need to create a .env file with the following:
 ```shell
+AUTH0_SECRET=YOUR_AUTH0_SECRET
+AUTH0_BASE_URL=YOUR_AUTH0_BASE_URL  // http://localhost:3000 for local dev
+AUTH0_ISSUER_BASE_URL=YOUR_AUTH0_ISSUER_BASE_URL // like dev-fpvbof5w5.us.auth0.com
+AUTH0_CLIENT_ID=YOUR_AUTH0_CLIENT_ID
+AUTH0_CLIENT_SECRET=YOUR_AUTH0_CLIENT_SECRET
+
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=YOUR-CLERK-PUBLISHABLE-KEY
 CLERK_SECRET_KEY=YOUR-CLERK-SECRET-KEY
 
